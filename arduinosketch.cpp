@@ -227,7 +227,19 @@ void loop()
         toPrint += " ";
       }
     }
-    lcd.print(toPrint);
+
+    if(check){
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Error           ");
+      lcd.setCursor(0,1);
+      lcd.print("Pls resend data");
+      check = 0;
+    }else{
+      lcd.print(toPrint);
+    }
+    
+
 
     
     fromApplication = "";
