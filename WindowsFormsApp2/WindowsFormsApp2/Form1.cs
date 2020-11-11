@@ -68,7 +68,7 @@ namespace WindowsFormsApp2
 
                 // Buffer to store the response bytes.
                 data = new Byte[256];
-               //
+
                 // String to store the response ASCII representation.
                 String responseData = String.Empty;
 
@@ -76,10 +76,10 @@ namespace WindowsFormsApp2
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
-               // if(responseData != "") { }
-               Console.WriteLine("Received: {0}", responseData);
-               textBox4.Text = responseData;
-               textBox4.Update();
+
+                Console.WriteLine("Received: {0}", responseData);
+                textBox4.Text = responseData;
+                textBox4.Update();
                 
 
                 // Close everything.
@@ -95,8 +95,6 @@ namespace WindowsFormsApp2
                 Console.WriteLine("SocketException: {0}", e);
             }
 
-            //Console.WriteLine("\n Press Enter to continue...");
-            //Console.Read();
         }
 
         private void button1_Click(object sender, EventArgs e)
