@@ -4,9 +4,9 @@ Controlling LCD display through wifi
 This project was implemented to create a simple winsocks application that sends data to an arduino.
 The arduino then reads the data and updates a 16x02 LCD display.
 
-## *Contents:*
-- *ArduinoLCD1602_wifi/WindowsFormsApp2/WindowsFormsApp2/*: The actual C# application (Created with visual studio 2019)
-- *arduinosketch.cpp*: Arduino sketch. NOTE: you will need to install LiquidCrystal_I2C library
+## Contents:
+- **ArduinoLCD1602_wifi/WindowsFormsApp2/WindowsFormsApp2/**: The actual C# application (Created with visual studio 2019)
+- **arduinosketch.cpp**: Arduino sketch. NOTE: you will need to install LiquidCrystal_I2C library
 
 ###### Copyright 2020 Kevin dela Cruz
 
