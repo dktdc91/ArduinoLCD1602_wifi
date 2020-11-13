@@ -186,8 +186,7 @@ void loop()
       char c = client.read();
 
       Serial.print(c); 
-
-
+       
       if (c == '>'){
         check = 0;
       }
@@ -228,6 +227,7 @@ void loop()
       }
     }
 
+     //エラーチェック
     if(check){
       lcd.clear();
       lcd.setCursor(0,0);
@@ -239,9 +239,6 @@ void loop()
       lcd.print(toPrint);
     }
     
-
-
-    
     fromApplication = "";
     Send("Change line text executed");
   }
@@ -250,9 +247,6 @@ void loop()
 
 void Send(String data)
 {
-
   sendwebdata(data);
-
-
   client.println("AT+CIPCLOSE=0"); 
 }
