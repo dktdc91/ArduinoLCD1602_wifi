@@ -40,62 +40,61 @@ namespace WindowsFormsApp2
             text2 = textBox2.Text;
         }
 
-
-        private void Connect(String server, String message)
+        private async Task ConnectAsync(string server, string message, int port = 80)
         {
             try
             {
-                // Create a TcpClient.
-                // Note, for this client to work you need to have a TcpServer
-                // connected to the same address as specified by the server, port
-                // combination.
-                Int32 port = 80;
-                TcpClient client = new TcpClient(server, port);
+                using (TcpClient client = new TcpClient())
+                {
+                    var result = client.BeginConnect(server, port, null, null);
+                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
 
-                Byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
+                    if (!success)
+                    {
+                        MessageBox.Show("Failed to connect. Check connection and try again.");
+                        throw new Exception("Failed to connect.");
+                    }
 
-                // Get a client stream for reading and writing.
-                //  Stream stream = client.GetStream();
+                    using (NetworkStream stream = client.GetStream())
+                    {
+                        byte[] data = Encoding.UTF8.GetBytes(message);
 
-                NetworkStream stream = client.GetStream();
+                        await stream.WriteAsync(data, 0, data.Length);
+                        Console.WriteLine("Sent: {0}", message);
 
-                // Send the message to the connected TcpServer.
-                stream.Write(data, 0, data.Length);
+                        data = new byte[256];
+                        string responseData = string.Empty;
 
-                Console.WriteLine("Sent: {0}", message);
+                        int bytes = await stream.ReadAsync(data, 0, data.Length);
+                        responseData = Encoding.UTF8.GetString(data, 0, bytes);
+                    
+                        Console.WriteLine("Received: {0}", responseData);
 
-                // Receive the TcpServer.response.
-
-                // Buffer to store the response bytes.
-                data = new Byte[256];
-
-                // String to store the response ASCII representation.
-                String responseData = String.Empty;
-
-
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
-
-                Console.WriteLine("Received: {0}", responseData);
-                textBox4.Text = responseData;
-                textBox4.Update();
-                
-
-                // Close everything.
-                stream.Close();
-                client.Close();
+                        // Use an event or other method to update your UI from here
+                        // instead of accessing the UI elements directly.
+                        UpdateUI(responseData);
+                    }
+                }
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
-                Console.WriteLine("ArgumentNullException: {0}", e);
+                Console.WriteLine("Exception: {0}", e);
+                // Log your exception (consider using a logging framework)
             }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-
         }
+
+        private void UpdateUI(string response)
+        {
+            // Ensure to invoke UI changes on the UI thread
+            if (textBox4.InvokeRequired)
+            {
+                textBox4.Invoke(new Action<string>(UpdateUI), response);
+                return;
+            }
+
+            textBox4.Text = response;
+        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -121,7 +120,11 @@ namespace WindowsFormsApp2
             String message = "<_UL2[";
             message += text2;
             message += "]>";
-            Connect(ipAddress, message);
+            try {
+                await ConnectAsync(ipAddress, message);
+            } catch (Exception ex) {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
         }
     }
 }
