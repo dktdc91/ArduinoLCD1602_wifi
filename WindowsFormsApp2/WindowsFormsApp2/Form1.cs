@@ -69,9 +69,7 @@ namespace WindowsFormsApp2
                         responseData = Encoding.UTF8.GetString(data, 0, bytes);
                     
                         Console.WriteLine("Received: {0}", responseData);
-
-                        // Use an event or other method to update your UI from here
-                        // instead of accessing the UI elements directly.
+                        
                         UpdateUI(responseData);
                     }
                 }
